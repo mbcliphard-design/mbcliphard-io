@@ -79,20 +79,6 @@
             color: #c0c0d0;
         }
         .benefit .icon { font-size: 20px; width: 32px; text-align: center; }
-        form { display: flex; flex-direction: column; gap: 12px; }
-        input {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            transition: 0.2s;
-        }
-        input::placeholder { color: #6a6a80; }
-        input:focus { border-color: #ffb74d; background: rgba(255,255,255,0.08); }
         .btn {
             width: 100%;
             padding: 16px;
@@ -105,25 +91,11 @@
             cursor: pointer;
             transition: 0.3s;
             margin-top: 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,183,77,0.3); }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .footer-text {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #5a5a70;
-        }
-        .footer-text a { color: #ffb74d; text-decoration: none; }
-        .footer-text a:hover { text-decoration: underline; }
-        .hidden { display: none; }
-        #success {
-            text-align: center;
-            padding: 20px 0;
-        }
-        #success .check { font-size: 48px; margin-bottom: 16px; }
-        #success h2 { color: #fff; font-size: 22px; margin-bottom: 8px; }
-        #success p { color: #a0a0b8; margin-bottom: 20px; }
         .btn-outline {
             display: inline-block;
             padding: 14px 28px;
@@ -135,11 +107,20 @@
             transition: 0.3s;
             font-size: 15px;
         }
-        .btn-outline:hover {
-            background: #ffb74d;
-            color: #1a1a2e;
+        .btn-outline:hover { background: #ffb74d; color: #1a1a2e; }
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #5a5a70;
         }
-        .error-msg { color: #ff6b6b; font-size: 13px; margin-top: -4px; display: none; }
+        .footer-text a { color: #ffb74d; text-decoration: none; }
+        .footer-text a:hover { text-decoration: underline; }
+        .hidden { display: none; }
+        #success { text-align: center; padding: 20px 0; }
+        #success .check { font-size: 48px; margin-bottom: 16px; }
+        #success h2 { color: #fff; font-size: 22px; margin-bottom: 8px; }
+        #success p { color: #a0a0b8; margin-bottom: 20px; }
         @media (max-width: 480px) {
             .container { padding: 28px 20px; }
             h1 { font-size: 24px; }
@@ -162,95 +143,40 @@
                 <div class="benefit"><span class="icon">📄</span> PDF pronto para imprimir</div>
             </div>
 
-            <form id="lead-form">
-                <input type="text" id="name" placeholder="Seu nome" required autocomplete="name">
-                <input type="email" id="email" placeholder="Seu melhor e-mail" required autocomplete="email">
-                <div class="error-msg" id="error-msg">Preencha todos os campos corretamente.</div>
-                <button type="submit" class="btn" id="submit-btn">📥 Quero meu checklist grátis</button>
-            </form>
+            <a href="#" class="btn" id="cta-btn" target="_blank">📥 Quero meu checklist grátis</a>
 
-            <p class="footer-text">Seus dados estão seguros. Não enviaremos spam. <a href="#">Política de Privacidade</a></p>
+            <p class="footer-text">Seus dados estão seguros. Não enviaremos spam.</p>
         </div>
 
         <div id="success" class="hidden">
             <div class="check">🎉</div>
             <h2>Checklist enviado!</h2>
-            <p>Olá <span id="user-name"></span>, acabamos de enviar o <strong>Checklist Completo do Ministério de Som</strong> para o e-mail <strong id="user-email"></strong>.</p>
+            <p>Enviamos o <strong>Checklist Completo do Ministério de Som</strong> para o seu e-mail.</p>
             <p style="font-size:14px; color:#8899aa;">📌 Não encontrou? Verifique a caixa de spam ou promessas.</p>
-            <div style="margin-top:20px; display:flex; flex-direction:column; gap:12px;">
-                <a href="#" class="btn-outline" id="ebook-link">📘 Quero o e-book completo →</a>
+            <div style="margin-top:20px;">
+                <a href="#" class="btn-outline" id="ebook-link" target="_blank" rel="noopener">📘 Quero o e-book completo →</a>
             </div>
-            <p class="footer-text" style="margin-top:24px;">Enquanto isso, já pode começar a usar o checklist no próximo culto! 🙏</p>
         </div>
     </div>
 
     <script>
-        const FORM_ID = 'form-section';
-        const SUCCESS_ID = 'success';
-        const FORM = document.getElementById('lead-form');
-        const NAME_INPUT = document.getElementById('name');
-        const EMAIL_INPUT = document.getElementById('email');
-        const SUBMIT_BTN = document.getElementById('submit-btn');
-        const ERROR_MSG = document.getElementById('error-msg');
-        const USER_NAME_SPAN = document.getElementById('user-name');
-        const USER_EMAIL_SPAN = document.getElementById('user-email');
+        // ⚙️ CONFIGURAÇÃO
+        // Depois de criar o formulário no MailerLite, cole o link aqui:
+        const MAILERLITE_FORM_URL = '';
+        const HOTMART_LINK = 'https://hotmart.com/pt-br/marketplace/produtos/domine-a-mesa-de-audio';
 
-        function isValidEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        }
-
-        FORM.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            ERROR_MSG.style.display = 'none';
-
-            const name = NAME_INPUT.value.trim();
-            const email = EMAIL_INPUT.value.trim();
-
-            if (!name || !email || !isValidEmail(email)) {
-                ERROR_MSG.style.display = 'block';
-                return;
+        // Se tiver URL do MailerLite, redireciona. Se não, mostra sucesso simulado.
+        document.getElementById('cta-btn').addEventListener('click', function(e) {
+            if (MAILERLITE_FORM_URL) {
+                window.open(MAILERLITE_FORM_URL, '_blank');
+            } else {
+                e.preventDefault();
+                document.getElementById('form-section').classList.add('hidden');
+                document.getElementById('success').classList.remove('hidden');
             }
-
-            SUBMIT_BTN.disabled = true;
-            SUBMIT_BTN.textContent = 'Enviando...';
-
-            try {
-                const response = await fetch('https://connect.mailerlite.com/api/subscribers', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        fields: { name: name },
-                        groups: [],
-                    })
-                });
-
-                if (response.ok || response.status === 409) {
-                    document.getElementById(FORM_ID).classList.add('hidden');
-                    USER_NAME_SPAN.textContent = name;
-                    USER_EMAIL_SPAN.textContent = email;
-                    document.getElementById(SUCCESS_ID).classList.remove('hidden');
-
-                    if (typeof fbq === 'function') {
-                        fbq('track', 'Lead');
-                    }
-                } else {
-                    ERROR_MSG.textContent = 'Erro ao enviar. Tente novamente.';
-                    ERROR_MSG.style.display = 'block';
-                }
-            } catch (err) {
-                document.getElementById(FORM_ID).classList.add('hidden');
-                USER_NAME_SPAN.textContent = name;
-                USER_EMAIL_SPAN.textContent = email;
-                document.getElementById(SUCCESS_ID).classList.remove('hidden');
-            }
-
-            SUBMIT_BTN.disabled = false;
-            SUBMIT_BTN.textContent = '📥 Quero meu checklist grátis';
         });
+
+        document.getElementById('ebook-link').href = HOTMART_LINK;
     </script>
 </body>
 </html>
